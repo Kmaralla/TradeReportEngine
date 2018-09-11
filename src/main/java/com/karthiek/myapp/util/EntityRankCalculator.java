@@ -11,17 +11,14 @@ import static java.util.stream.Collectors.*;
 
 public class EntityRankCalculator {
 
-    private static HashSet<TradeDetails> tradeDetails;
-
     public static void printReport(HashSet tradeDetailsSet,StringBuilder builder) {
-        tradeDetails = tradeDetailsSet;
 
-        printDailyIncomingEntityRanking(builder);
-        printDailyOutgoingEntityRanking(builder);
+        printDailyIncomingEntityRanking(tradeDetailsSet, builder);
+        printDailyOutgoingEntityRanking(tradeDetailsSet, builder);
     }
 
-    private static void printDailyIncomingEntityRanking(StringBuilder builder) {
-        Map<Date, LinkedList<RankingEntities>> incomingMap = printDailyEntityRanking(TradeType.S);
+    private static void printDailyIncomingEntityRanking(HashSet tradeDetailsSet, StringBuilder builder) {
+        Map<Date, LinkedList<RankingEntities>> incomingMap = printDailyEntityRanking(tradeDetailsSet, TradeType.S);
         builder .append("Incoming:Settlement Date")
                 .append("        |     ")
                 .append("Rank")
@@ -32,8 +29,8 @@ public class EntityRankCalculator {
     }
 
 
-    private static void printDailyOutgoingEntityRanking(StringBuilder builder) {
-        Map<Date, LinkedList<RankingEntities>> outgoingMap = printDailyEntityRanking(TradeType.B);
+    private static void printDailyOutgoingEntityRanking(HashSet tradeDetailsSet, StringBuilder builder) {
+        Map<Date, LinkedList<RankingEntities>> outgoingMap = printDailyEntityRanking(tradeDetailsSet, TradeType.B);
         builder .append("Outgoing:Settlement Date")
                 .append("        |     ")
                 .append("Rank")
@@ -43,16 +40,17 @@ public class EntityRankCalculator {
         printEntitiesMap(outgoingMap,builder);
     }
 
-    private static Map<Date, LinkedList<RankingEntities>> printDailyEntityRanking(TradeType tradeType) {
+    private static Map<Date, LinkedList<RankingEntities>> printDailyEntityRanking(HashSet<TradeDetails> tradeDetailsSet, TradeType tradeType) {
         final Map<Date, LinkedList<RankingEntities>> ranking = new HashMap<>();
+        //HashSet<TradeDetails> copyOfOriginal = tradeDetails;
 
-        tradeDetails.stream()
+        tradeDetailsSet.stream()
                     .filter(details -> details.getType().equals(tradeType))
                     .collect(groupingBy(TradeDetails::getSettlementDate, toSet()))
                     .forEach((date, tradeDetails) -> {
-                    final AtomicInteger rank = new AtomicInteger(0);
 
-                    LinkedList<RankingEntities> ranks = tradeDetails.stream()
+                        final AtomicInteger rank = new AtomicInteger(0);
+                        final LinkedList<RankingEntities> ranks = tradeDetails.stream()
                                                     //Sort the Amount
                                                        .sorted((a, b) -> b.getTradeAmount().compareTo(a.getTradeAmount()))
                                                     //Assign Incremented Rank to each Entity

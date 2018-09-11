@@ -8,7 +8,7 @@ public class TradeDetails {
     private final String entity;
     private final TradeType type;
     private final Date instructionDate;
-    private final Date settlementDate;
+    private Date settlementDate;
     private final TradeAmount tradeAmount;
     private final String currency;
 
@@ -48,5 +48,9 @@ public class TradeDetails {
 
     public String getCurrency() {
         return currency;
+    }
+
+    public void setSettlementDate(Date updatedSettlementDate) {
+        this.settlementDate = updatedSettlementDate;
     }
 }

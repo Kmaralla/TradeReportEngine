@@ -19,7 +19,7 @@ public class TradeUtils {
     public  static final  String   SPACE_DELIMITER              = " ";
     public  static final  String   INPUT_FILE_PATH              = "input.txt";
     private static final  String[] differentWeekendCurrencies   = new String[]{"AED","SAR"};
-    private static final  String   datePattern                  = "DDMMMYYYY";
+    private static final String datePattern = "ddMMMyyyy";
 
 
     public static Date convertToDate(String dateInString) throws ParseException {
@@ -27,7 +27,7 @@ public class TradeUtils {
         return format.parse(dateInString);
     }
 
-    public static Date getSettlementDate(String currency, Date settlementDate){
+    public static Date updateSettlementDateIfWeekend(String currency, Date settlementDate) {
         while(isWeekEnd(currency,settlementDate)){
             settlementDate=forwardOneDay(settlementDate);
         }
@@ -56,11 +56,7 @@ public class TradeUtils {
         }
 
         //For other currencies
-        if(c.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK)==Calendar.SUNDAY ){
-            return true;
-        }
-
-        return false;
+        return c.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || c.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
 
     }
 

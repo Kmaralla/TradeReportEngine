@@ -1,6 +1,7 @@
 package com.karthiek.myapp;
 
 import com.karthiek.myapp.core.InitTradeDetailsStore;
+import com.karthiek.myapp.core.WorkingDayChecker;
 import com.karthiek.myapp.util.EntityRankCalculator;
 import com.karthiek.myapp.util.HighestAmountCalculator;
 import com.karthiek.myapp.util.TradeUtils;
@@ -8,8 +9,9 @@ import com.karthiek.myapp.util.TradeUtils;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * @author kmaralla
@@ -41,7 +43,6 @@ public class TradeReportsRunner {
      * Parsing eachline and creating object for each Record.
      * Adding each object into Set
      *
-     * @param detailsStore
      * @throws Exception
      */
     private static InitTradeDetailsStore readInputAndStore() throws Exception{
@@ -58,8 +59,9 @@ public class TradeReportsRunner {
         HashSet tradeDetailsSet = detailsStore.getTradeDetailsSet();
         StringBuilder builder   = new StringBuilder();//StringBuilder not synchronied but faster as assumption is single-Threaded
 
-        HighestAmountCalculator.printReport(tradeDetailsSet,builder);
-        EntityRankCalculator.printReport(tradeDetailsSet,builder);
+        WorkingDayChecker.updateIfNotWorkingDay(tradeDetailsSet);//Update SettlementDate to immediate Working Day
+        HighestAmountCalculator.printReport(tradeDetailsSet, builder);//Print HighestAmount for Buy/Sell daily
+        EntityRankCalculator.printReport(tradeDetailsSet, builder);//Rank Entities for Buy/Sell daily
 
         System.out.println("Reporting Engine starting...");
         System.out.println(builder);
