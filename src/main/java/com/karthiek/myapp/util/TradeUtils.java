@@ -1,25 +1,39 @@
 package com.karthiek.myapp.util;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Locale;
 
+/**
+ * @author kmaralla
+ * @Date 10/09/18
+ * This Utility class has:
+ * 1.Constant fields
+ * 2.Utility static methods to do certain Task
+ */
 public class TradeUtils {
-    private String[] differentWeekendCurrencies = new String[]{"AED","SAR"};
-    public Date getSettlementDate(String currency, Date settlementDate){
+    public  static final  String   SPACE_DELIMITER              = " ";
+    public  static final  String   INPUT_FILE_PATH              = "input.txt";
+    private static final  String[] differentWeekendCurrencies   = new String[]{"AED","SAR"};
+    private static final  String   datePattern                  = "DDMMMYYYY";
+
+
+    public static Date convertToDate(String dateInString) throws ParseException {
+        DateFormat format = new SimpleDateFormat(datePattern, Locale.ENGLISH);
+        return format.parse(dateInString);
+    }
+
+    public static Date getSettlementDate(String currency, Date settlementDate){
         while(isWeekEnd(currency,settlementDate)){
             settlementDate=forwardOneDay(settlementDate);
         }
         return settlementDate;
     }
 
-    private Date forwardOneDay(Date settlementDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(settlementDate);
-        calendar.add(Calendar.DATE,1);
-        return calendar.getTime();
-
-    }
 
     /**
      * If currency is AED or SAR, weekend is Friday and Saturday
@@ -29,7 +43,7 @@ public class TradeUtils {
      * @param settlementDate
      * @return
      */
-    private boolean isWeekEnd(String currency, Date settlementDate) {
+    private static boolean isWeekEnd(String currency, Date settlementDate) {
         Calendar c = new GregorianCalendar();
         c.setTime(settlementDate);
 
@@ -47,6 +61,14 @@ public class TradeUtils {
         }
 
         return false;
+
+    }
+
+    private static Date forwardOneDay(Date settlementDate) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(settlementDate);
+        calendar.add(Calendar.DATE,1);
+        return calendar.getTime();
 
     }
 }

@@ -1,4 +1,4 @@
-package com.karthiek.myapp.core;
+package com.karthiek.myapp.pojo;
 
 import java.math.BigDecimal;
 

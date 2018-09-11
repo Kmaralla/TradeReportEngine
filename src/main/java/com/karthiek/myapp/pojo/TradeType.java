@@ -1,8 +1,12 @@
-package com.karthiek.myapp.core;
+package com.karthiek.myapp.pojo;
 
 public enum TradeType {
-    BUY("B","Buy Stocks"),
-    SELL("S","Sell Stocks");
+    B("B","Buy Stocks"),
+    S("S","Sell Stocks");
+
+    public String getCode() {
+        return code;
+    }
 
     private final String code;
     private final String desc;
