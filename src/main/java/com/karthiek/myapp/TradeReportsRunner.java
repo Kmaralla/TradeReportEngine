@@ -28,6 +28,8 @@ import java.util.List;
  */
 public class TradeReportsRunner {
 
+    private static StringBuilder builder = new StringBuilder();//StringBuilder not synchronied but faster as assumption is single-Threaded
+
     public static void main(String[] args){
         try{
             InitTradeDetailsStore detailsStore = readInputAndStore();
@@ -56,8 +58,8 @@ public class TradeReportsRunner {
     }
 
     private static void printReports(InitTradeDetailsStore detailsStore) {
+
         HashSet tradeDetailsSet = detailsStore.getTradeDetailsSet();
-        StringBuilder builder   = new StringBuilder();//StringBuilder not synchronied but faster as assumption is single-Threaded
 
         WorkingDayChecker.updateIfNotWorkingDay(tradeDetailsSet);//Update SettlementDate to immediate Working Day
         HighestAmountCalculator.printReport(tradeDetailsSet, builder);//Print HighestAmount for Buy/Sell daily
@@ -67,7 +69,10 @@ public class TradeReportsRunner {
         System.out.println(builder);
         System.out.println("Reporting Engine Exiting...");
 
+    }
 
+    public static StringBuilder getBuilder() {
+        return builder;
     }
 
 }
