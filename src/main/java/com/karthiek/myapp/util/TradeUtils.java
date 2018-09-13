@@ -48,7 +48,7 @@ public class TradeUtils {
         c.setTime(settlementDate);
 
         for(String givenCurrency:differentWeekendCurrencies){
-            if(givenCurrency==currency){//For Currencies AED and SAR
+            if (givenCurrency.equals(currency)) {//For Currencies AED and SAR
                 if(c.get(Calendar.DAY_OF_WEEK)==Calendar.FRIDAY || c.get(Calendar.DAY_OF_WEEK)==Calendar.SATURDAY ){
                     return true;
                 }
